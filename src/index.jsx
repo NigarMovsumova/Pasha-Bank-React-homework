@@ -20,6 +20,7 @@ class App extends React.Component {
             errorMessage: ''
         };
     }
+
     componentDidMount() {
         //let's say that we are required to load both tables simultaneously
         //of course, it can be different, but it is just my guess for this time.
@@ -33,8 +34,11 @@ class App extends React.Component {
         ).catch((error) => {
             console.log(error.message);
         })
-    }
-    render() {
+    };
+
+    //It's a bad practise to put several returns inside of render
+    //it's better to isolate them into another "helper" function to avoid conditionals
+    renderContent() {
         let usersState = this.state.users;
         let postsState = this.state.posts;
         let errorMessageState = this.state.errorMessage;
@@ -45,8 +49,7 @@ class App extends React.Component {
                 />
 
             );
-        }
-        else if (!errorMessageState && usersState && postsState) {
+        } else if (!errorMessageState && usersState && postsState) {
 
             return (
                 <AppComponent>
@@ -60,8 +63,14 @@ class App extends React.Component {
             );
         }
         return (
-            <LoadingComponent/>
+            <LoadingComponent message="Please, accept location request"/>
         );
+
+    }
+
+
+    render() {
+        return (this.renderContent())
 
     }
 }
